@@ -1,0 +1,61 @@
+function Conta(agencia, conta, saldo){
+    this.agencia = agencia;
+    this.conta = conta;
+    this.saldo = saldo;
+}
+
+Conta.prototype.sacar = function(valor){
+    if(valor > this.saldo){
+        console.log(`Saldo insuficiente: ${this.saldo}`);
+        return;
+    }
+
+    this.saldo -= valor;
+    this.verSaldo();
+};
+
+Conta.prototype.depositar = function(valor){
+    this.saldo += valor;
+    this.verSaldo();
+};
+
+Conta.prototype.verSaldo = function(){
+    console.log(`Agencia: ${this.agencia} Conta: ${this.conta} Saldo: R$${this.saldo.toFixed(2)}`);
+};
+const conta1 = new Conta(3510, 99999, 5400);
+
+function ContaCorrente(agencia, conta, saldo, limite){
+    Conta.call(this, agencia, conta, saldo)
+    this.limite = limite;
+}
+ContaCorrente.prototype = Object.create(Conta.prototype);
+ContaCorrente.prototype.constructor = ContaCorrente;
+
+ContaCorrente.prototype.sacar = function(valor){
+    if(valor > (this.saldo + this.limite)) {
+        console.log(`Saldo negativo: ${this.saldo}`);
+        return;
+    }
+
+    this.saldo -= valor;
+    this.verSaldo();
+};
+
+function ContaPoupanca(agencia, conta, saldo){
+    Conta.call(this, agencia, conta, saldo);
+}
+ContaPoupanca.prototype = Object.create(Conta.prototype);
+ContaPoupanca.prototype.constructor = ContaPoupanca;
+
+console.log('Corrente: ')
+
+
+const corrente = new ContaCorrente(2541, 123456, 0, 100);
+corrente.sacar(110);
+corrente.sacar(110);
+corrente.depositar(10)
+
+console.log('Poupança: ')
+
+const poupanca = new Conta(1234, 5555, 100);
+poupanca.sacar(110)
